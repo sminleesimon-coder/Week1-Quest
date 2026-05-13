@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SYNAPEX · Variant 04 — Editorial</title>
+<meta name="description" content="Cognitive Agentic AI × EEG · Editorial blueprint preview" />
+<link rel="icon" type="image/svg+xml" href="../../img/logo/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<style>
+:root {
+  --paper: #F4F1EA;
+  --paper-2: #ECE7DC;
+  --ink: #0A0A0A;
+  --ink-2: #2A2A2A;
+  --dim: #5A5A5A;
+  --rule: rgba(10,10,10,0.18);
+  --rule-2: rgba(10,10,10,0.40);
+  --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-feature-settings: 'kern' 1;
+  -webkit-font-smoothing: antialiased; line-height: 1.55;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 32px, rgba(10,10,10,0.025) 32px, rgba(10,10,10,0.025) 33px);
+}
+a { color: inherit; }
+img, svg { display: block; max-width: 100%; }
+::selection { background: var(--ink); color: var(--paper); }
+
+.serif { font-family: 'Fraunces', 'Times New Roman', serif; font-optical-sizing: auto; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+/* MASTHEAD */
+.masthead { border-bottom: 2px solid var(--ink); padding: 18px 0 14px; }
+.mast-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.mast-row .left { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase; }
+.mast-row .center { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 900; letter-spacing: -0.02em; }
+.mast-row .right { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase; text-align: right; }
+.mast-meta { margin-top: 12px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase; }
+
+/* HERO */
+.hero { padding: 72px 0 40px; border-bottom: 1px solid var(--rule); }
+.hero-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; }
+.hero h1 {
+  font-family: 'Fraunces', serif; font-weight: 700;
+  font-size: clamp(56px, 9vw, 144px); line-height: 0.93; letter-spacing: -0.04em;
+  font-style: italic;
+}
+.hero h1 em { font-style: normal; font-weight: 900; }
+.hero h1 .strike { text-decoration: line-through; text-decoration-thickness: 4px; color: var(--dim); }
+.hero .lede {
+  padding-top: 18px; margin-top: 18px; border-top: 1px solid var(--rule);
+  font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; line-height: 1.35;
+  max-width: 580px;
+}
+.hero .lede::first-letter {
+  font-size: 64px; font-weight: 800; float: left;
+  line-height: 1; margin: 4px 8px -4px 0; font-family: 'Fraunces', serif;
+}
+.hero .byline { margin-top: 28px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); }
+.hero .byline b { color: var(--ink); }
+
+/* BLUEPRINT */
+.blueprint {
+  position: relative;
+  border: 1px solid var(--rule-2);
+  background:
+    repeating-linear-gradient(0deg, transparent 0, transparent 19px, rgba(10,10,10,0.08) 19px, rgba(10,10,10,0.08) 20px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 19px, rgba(10,10,10,0.08) 19px, rgba(10,10,10,0.08) 20px),
+    var(--paper-2);
+  padding: 24px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.bp-head { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-2); }
+.bp-body { position: relative; aspect-ratio: 4 / 3; }
+.bp-body svg { width: 100%; height: 100%; }
+.bp-foot { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule-2); display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-size: 10px; letter-spacing: 0.05em; color: var(--ink-2); }
+.bp-foot div { display: flex; justify-content: space-between; }
+.bp-foot .v { color: var(--ink); font-weight: 600; }
+
+/* PULL QUOTE */
+.pullquote { padding: 100px 0; border-bottom: 1px solid var(--rule); }
+.pullquote q {
+  display: block; font-family: 'Fraunces', serif; font-weight: 800;
+  font-size: clamp(38px, 6vw, 84px); letter-spacing: -0.03em; line-height: 1;
+  font-style: italic; quotes: none;
+  max-width: 1100px;
+}
+.pullquote q::before, .pullquote q::after { content: ''; }
+.pullquote q em { font-style: normal; }
+.pullquote q .accent { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 12px; }
+.pullquote .attrib { margin-top: 28px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase; color: var(--dim); }
+
+/* COLUMNS — features as numbered articles */
+.columns { padding: 80px 0; border-bottom: 1px solid var(--rule); }
+.col-head { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 24px; margin-bottom: 36px; border-bottom: 2px solid var(--ink); }
+.col-head h2 { font-family: 'Fraunces', serif; font-size: clamp(36px, 5vw, 64px); letter-spacing: -0.03em; font-weight: 800; line-height: 1; }
+.col-head .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.col-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.col-art {
+  padding: 24px 20px; border-left: 1px solid var(--rule);
+  position: relative; transition: background 220ms var(--easing);
+}
+.col-art:first-child { border-left: none; padding-left: 0; }
+.col-art:last-child { padding-right: 0; }
+.col-art:hover { background: rgba(10,10,10,0.03); }
+.col-art .num { font-family: 'Fraunces', serif; font-size: 64px; font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+.col-art h3 { margin-top: 8px; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+.col-art p { margin-top: 10px; font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+
+/* BIG ABOUT */
+.about-band { padding: 100px 0; border-bottom: 1px solid var(--rule); }
+.about-grid { display: grid; grid-template-columns: 4fr 8fr; gap: 64px; align-items: start; }
+.about-grid .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase; color: var(--dim); padding-top: 24px; border-top: 2px solid var(--ink); }
+.about-grid h2 { font-family: 'Fraunces', serif; font-size: clamp(40px, 5.5vw, 76px); letter-spacing: -0.03em; line-height: 1.05; font-weight: 800; padding-top: 24px; border-top: 2px solid var(--ink); }
+.about-grid h2 em { font-style: italic; font-weight: 500; }
+.about-grid h2 .ul { text-decoration: underline; text-decoration-thickness: 5px; text-underline-offset: 8px; }
+
+/* CTA */
+.cta-mast { padding: 80px 0; text-align: center; border-bottom: 2px solid var(--ink); }
+.cta-mast .pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.20em; text-transform: uppercase; color: var(--dim); }
+.cta-mast h2 { margin-top: 18px; font-family: 'Fraunces', serif; font-weight: 900; font-size: clamp(48px, 8vw, 120px); letter-spacing: -0.04em; line-height: 0.95; }
+.cta-mast h2 em { font-style: italic; font-weight: 500; }
+.cta-mast .btn {
+  display: inline-block; margin-top: 32px;
+  padding: 18px 40px; border: 2px solid var(--ink);
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper);
+  transition: all 220ms var(--easing);
+}
+.cta-mast .btn:hover { background: var(--paper); color: var(--ink); }
+
+/* FOOTER */
+footer { padding: 32px 0; font-family: 'JetBrains Mono', monospace; }
+footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); }
+
+/* CURSOR DOT */
+.cursor-dot {
+  position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+  background: var(--ink); border-radius: 50%;
+  pointer-events: none; z-index: 999; mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  transition: width 200ms var(--easing), height 200ms var(--easing), opacity 200ms var(--easing);
+  opacity: 0;
+}
+@media (hover: hover) { .cursor-dot.show { opacity: 1; } }
+
+/* REVEAL */
+.r { opacity: 0; transform: translateY(20px); transition: opacity 700ms var(--easing), transform 700ms var(--easing); }
+.r.in { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1024px) {
+  .hero-grid, .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .col-grid { grid-template-columns: repeat(2, 1fr); }
+  .col-art:nth-child(3) { border-left: none; padding-left: 0; }
+}
+@media (max-width: 720px) {
+  .col-grid { grid-template-columns: 1fr; }
+  .col-art { border-left: none; padding: 24px 0; border-top: 1px solid var(--rule); }
+  .col-art:first-child { border-top: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor"></div>
+
+<!-- MASTHEAD -->
+<section class="masthead">
+  <div class="container">
+    <div class="mast-row">
+      <div class="left">Vol. 01 · Issue 04</div>
+      <div class="center">SYNAPEX <span class="mono" style="font-size:14px;font-weight:500;letter-spacing:0.2em">QUARTERLY</span></div>
+      <div class="right">Cognitive Agentic AI</div>
+    </div>
+    <div class="mast-meta">
+      <span>2026 · Seoul / SF</span>
+      <span>SYNAPEX.AI</span>
+      <span>FOR PROFESSIONAL USE</span>
+    </div>
+  </div>
+</section>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1 class="serif">
+        Read your <em>brain.</em><br/>
+        <span class="strike">Then</span> reach<br/>
+        your <em>peak.</em>
+      </h1>
+      <p class="lede">
+        SYNAPEX는 EEG 헤드밴드와 AI 에이전트를 결합한 첫 번째 시스템입니다. 측정만 하지 않고, 추론하고, 자동으로 개입합니다. 학원·임원·스포츠에서 시작해, 결국 의사결정과 보험의 미래까지 다시 씁니다.
+      </p>
+      <div class="byline">By <b>Founders, SYNAPEX</b> · Filed under Cognitive Engineering</div>
+    </div>
+    <aside class="blueprint">
+      <div class="bp-head">
+        <span>FIG. 01 — SYNAPEX BAND v0.7</span>
+        <span>SCALE 1:2</span>
+      </div>
+      <div class="bp-body">
+        <svg viewBox="0 0 400 300" fill="none" stroke="#0A0A0A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- center axis -->
+          <line x1="200" y1="20" x2="200" y2="280" stroke-dasharray="3 4" opacity="0.4"/>
+          <line x1="20" y1="150" x2="380" y2="150" stroke-dasharray="3 4" opacity="0.4"/>
+
+          <!-- Band outer -->
+          <path d="M 40 140 Q 200 60, 360 140 L 360 175 Q 200 105, 40 175 Z"/>
+          <!-- Inner liner -->
+          <path d="M 50 145 Q 200 70, 350 145 L 350 170 Q 200 100, 50 170 Z" opacity="0.5"/>
+
+          <!-- Sensor 1 -->
+          <circle cx="100" cy="128" r="6"/>
+          <circle cx="100" cy="128" r="14" opacity="0.3"/>
+          <line x1="100" y1="100" x2="100" y2="80"/>
+          <text x="100" y="74" text-anchor="middle" font-family="JetBrains Mono" font-size="9" stroke="none" fill="#0A0A0A">S1·Fp1</text>
+
+          <!-- Sensor 2 -->
+          <circle cx="170" cy="105" r="6"/>
+          <circle cx="170" cy="105" r="14" opacity="0.3"/>
+          <line x1="170" y1="80" x2="170" y2="60"/>
+          <text x="170" y="54" text-anchor="middle" font-family="JetBrains Mono" font-size="9" stroke="none" fill="#0A0A0A">S2·F7</text>
+
+          <!-- Sensor 3 -->
+          <circle cx="230" cy="105" r="6"/>
+          <circle cx="230" cy="105" r="14" opacity="0.3"/>
+          <line x1="230" y1="80" x2="230" y2="60"/>
+          <text x="230" y="54" text-anchor="middle" font-family="JetBrains Mono" font-size="9" stroke="none" fill="#0A0A0A">S3·F8</text>
+
+          <!-- Sensor 4 -->
+          <circle cx="300" cy="128" r="6"/>
+          <circle cx="300" cy="128" r="14" opacity="0.3"/>
+          <line x1="300" y1="100" x2="300" y2="80"/>
+          <text x="300" y="74" text-anchor="middle" font-family="JetBrains Mono" font-size="9" stroke="none" fill="#0A0A0A">S4·Fp2</text>
+
+          <!-- measure brackets -->
+          <line x1="40" y1="230" x2="360" y2="230"/>
+          <line x1="40" y1="225" x2="40" y2="235"/>
+          <line x1="360" y1="225" x2="360" y2="235"/>
+          <text x="200" y="248" text-anchor="middle" font-family="JetBrains Mono" font-size="10" stroke="none" fill="#0A0A0A">W = 220 mm · 38 g</text>
+
+          <!-- annotations -->
+          <text x="20" y="285" font-family="JetBrains Mono" font-size="9" stroke="none" fill="#5A5A5A">A — Dry electrode</text>
+          <text x="220" y="285" font-family="JetBrains Mono" font-size="9" stroke="none" fill="#5A5A5A">B — BLE 5.2 / USB-C</text>
+        </svg>
+      </div>
+      <div class="bp-foot">
+        <div><span>SAMPLING</span><span class="v">256Hz/24bit</span></div>
+        <div><span>LATENCY</span><span class="v">&lt; 80ms</span></div>
+        <div><span>BATTERY</span><span class="v">14h</span></div>
+        <div><span>CHANNELS</span><span class="v">4ch dry</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- PULL QUOTE -->
+<section class="pullquote">
+  <div class="container r">
+    <q class="serif">
+      기존 AI 에이전트는 텍스트와 도구를 읽는다.<br/>
+      SYNAPEX는 <span class="accent">뇌 상태</span>를 읽는다.
+    </q>
+    <div class="attrib">Editor's Note · Cognitive Engineering Manifesto, p. 04</div>
+  </div>
+</section>
+
+<!-- FEATURES AS COLUMNS -->
+<section class="columns">
+  <div class="container">
+    <div class="col-head">
+      <h2 class="serif">The Architecture, in four parts.</h2>
+      <div class="meta">§ 02 — Features</div>
+    </div>
+    <div class="col-grid">
+      <article class="col-art r">
+        <div class="num serif">01</div>
+        <h3>Observe</h3>
+        <p>4채널 dry electrode가 256Hz로 신호를 수집한다. 의료기기급 SNR.</p>
+      </article>
+      <article class="col-art r">
+        <div class="num serif">02</div>
+        <h3>Reason</h3>
+        <p>LLM × Cognitive Profile이 6단계 인지 상태를 매 초 분류한다.</p>
+      </article>
+      <article class="col-art r">
+        <div class="num serif">03</div>
+        <h3>Act</h3>
+        <p>난이도 조정·휴식·코치 알림 — 에이전트가 자동으로 개입한다.</p>
+      </article>
+      <article class="col-art r">
+        <div class="num serif">04</div>
+        <h3>Personalize</h3>
+        <p>fMRI 프로파일로 1인 1코치 수준의 맞춤 모델링을 수행한다.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-band">
+  <div class="container about-grid">
+    <div class="label r">§ 03 — Our Why</div>
+    <h2 class="serif r">
+      We measure <em>what others</em><br/>
+      simply <span class="ul">guess.</span>
+    </h2>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-mast">
+  <div class="container">
+    <div class="pre">Request a Demo · 데모 신청</div>
+    <h2 class="serif r">Train <em>the brain</em><br/>behind your <em>best</em> decisions.</h2>
+    <a class="btn" href="mailto:hello@synapex.ai?subject=Demo Request">Send Inquiry</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container row">
+    <span>© 2026 SYNAPEX, Inc.</span>
+    <span>Set in Fraunces · Inter · JetBrains Mono</span>
+    <span>VARIANT_04 · EDITORIAL</span>
+  </div>
+</footer>
+
+<script>
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.15 });
+  document.querySelectorAll('.r').forEach(el => io.observe(el));
+} else { document.querySelectorAll('.r').forEach(el => el.classList.add('in')); }
+
+// Cursor follower
+const cursor = document.getElementById('cursor');
+let mx = 0, my = 0, cx = 0, cy = 0;
+addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.classList.add('show'); });
+addEventListener('mouseleave', () => cursor.classList.remove('show'));
+function tick() {
+  cx += (mx - cx) * 0.18; cy += (my - cy) * 0.18;
+  cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+  requestAnimationFrame(tick);
+}
+if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) tick();
+
+// expand cursor over interactive
+document.querySelectorAll('a, .col-art').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.style.width = '36px', cursor.style.height = '36px');
+  el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; });
+});
+</script>
+</body>
+</html>

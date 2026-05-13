@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SYNAPEX · Variant 03 — Apple style</title>
+<meta name="description" content="Cognitive Agentic AI × EEG · Apple-inspired light preview" />
+<link rel="icon" type="image/svg+xml" href="../../img/logo/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+<style>
+:root {
+  --bg: #F5F5F7;
+  --bg-2: #FFFFFF;
+  --bg-dark: #1D1D1F;
+  --txt: #1D1D1F;
+  --txt-2: #424245;
+  --dim: #86868B;
+  --line: rgba(0,0,0,0.10);
+  --accent: #0066CC;
+  --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t: 320ms var(--easing);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--txt); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; -webkit-font-smoothing: antialiased; line-height: 1.45; font-feature-settings: 'kern' 1; }
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+::selection { background: var(--bg-dark); color: var(--bg); }
+
+.container { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
+
+/* NAV */
+nav.top { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(245,245,247,0.78); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 48px; max-width: 1120px; margin: 0 auto; padding: 0 22px; }
+.brand { font-weight: 700; letter-spacing: -0.01em; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+.brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bg-dark); }
+.nav-menu { display: flex; gap: 26px; }
+.nav-menu a { font-size: 12px; color: var(--txt); opacity: 0.85; transition: opacity var(--t); }
+.nav-menu a:hover { opacity: 1; }
+
+/* HERO */
+.hero { padding: 120px 0 60px; text-align: center; position: relative; overflow: hidden; }
+.eyebrow { font-size: 19px; font-weight: 600; color: var(--accent); letter-spacing: -0.01em; }
+.hero h1 { font-size: clamp(48px, 8vw, 96px); line-height: 1.05; letter-spacing: -0.045em; font-weight: 700; margin-top: 8px; }
+.hero h1 .light { font-weight: 600; color: var(--txt-2); display: block; }
+.hero p.tagline { margin-top: 18px; font-size: clamp(20px, 2.2vw, 26px); color: var(--txt-2); font-weight: 500; letter-spacing: -0.01em; max-width: 720px; margin-left: auto; margin-right: auto; }
+.hero-actions { margin-top: 18px; display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; }
+.hero-actions a { color: var(--accent); font-size: 17px; font-weight: 400; letter-spacing: -0.01em; }
+.hero-actions a:hover { text-decoration: underline; }
+
+/* HERO DEVICE */
+.hero-device {
+  margin-top: 50px; position: relative;
+  width: 100%; aspect-ratio: 16 / 10; max-width: 900px; margin-left: auto; margin-right: auto;
+}
+.hero-device::before {
+  content: ''; position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  width: 70%; height: 60%; background: radial-gradient(ellipse, rgba(0,102,204,0.10), transparent 70%);
+  filter: blur(60px); animation: pulse 6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); } }
+.hero-device svg { position: relative; z-index: 1; width: 100%; height: 100%; animation: floaty 7s ease-in-out infinite; }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* FULL SECTION */
+section.full { padding: 100px 0; text-align: center; }
+section.full.dark { background: var(--bg-dark); color: var(--bg); }
+section.full.dark .dim { color: rgba(255,255,255,0.6); }
+section.full h2 { font-size: clamp(40px, 6vw, 80px); letter-spacing: -0.035em; line-height: 1.05; font-weight: 700; max-width: 900px; margin-left: auto; margin-right: auto; }
+section.full h2 b { font-weight: 700; }
+section.full.dark h2 b { background: linear-gradient(90deg, #66BFFF, #BAE4FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+section.full h2 b.cool { background: linear-gradient(90deg, #0066CC, #4DA3E0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+section.full p.sub { margin-top: 22px; font-size: clamp(18px, 1.8vw, 21px); color: var(--txt-2); max-width: 760px; margin-left: auto; margin-right: auto; font-weight: 500; }
+section.full.dark p.sub { color: rgba(255,255,255,0.72); }
+.dim { color: var(--txt-2); }
+
+/* SPEC NUMBERS */
+.specs-row { margin-top: 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 960px; margin-left: auto; margin-right: auto; }
+.spec-item { padding: 28px 16px; }
+.spec-item .num { font-size: clamp(48px, 5.5vw, 80px); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+.spec-item .num span { font-size: 0.45em; color: var(--dim); font-weight: 500; letter-spacing: -0.01em; }
+.spec-item .lbl { margin-top: 12px; font-size: 14px; color: var(--dim); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+section.full.dark .spec-item .num span,
+section.full.dark .spec-item .lbl { color: rgba(255,255,255,0.55); }
+
+/* MARKETS GALLERY */
+.markets {
+  margin-top: 60px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;
+}
+.market-card {
+  aspect-ratio: 4 / 3;
+  border-radius: 22px;
+  padding: 32px; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--bg-2); transition: var(--t);
+}
+.market-card:hover { transform: translateY(-3px); box-shadow: 0 30px 80px rgba(0,0,0,0.08); }
+.market-card.dark { background: var(--bg-dark); color: var(--bg); }
+.market-card .label { font-size: 13px; color: var(--dim); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+.market-card.dark .label { color: rgba(255,255,255,0.55); }
+.market-card h3 { font-size: clamp(26px, 3vw, 36px); letter-spacing: -0.025em; font-weight: 700; line-height: 1.1; margin-top: 8px; }
+.market-card .glyph { width: 88px; height: 88px; align-self: flex-end; opacity: 0.85; }
+.market-card .glyph svg { width: 100%; height: 100%; }
+
+/* DEVICE CLOSEUP */
+.device-closeup {
+  margin-top: 60px;
+  border-radius: 28px;
+  background: var(--bg-dark);
+  padding: 60px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+  align-items: center; color: var(--bg);
+  position: relative; overflow: hidden;
+}
+.device-closeup .vis { position: relative; aspect-ratio: 4 / 3; display: grid; place-items: center; }
+.device-closeup .vis::before { content: ''; position: absolute; inset: 10%; background: radial-gradient(circle, rgba(102,191,255,0.18), transparent 65%); filter: blur(50px); }
+.device-closeup .vis svg { position: relative; z-index: 1; width: 100%; animation: rotate 30s linear infinite; }
+@keyframes rotate { 0% { transform: rotateZ(-3deg); } 50% { transform: rotateZ(3deg); } 100% { transform: rotateZ(-3deg); } }
+.device-closeup .txt h3 { font-size: clamp(28px, 3.5vw, 44px); letter-spacing: -0.03em; line-height: 1.1; font-weight: 700; }
+.device-closeup .txt p { margin-top: 16px; color: rgba(255,255,255,0.75); font-size: 17px; line-height: 1.6; }
+.device-closeup .txt .link { margin-top: 22px; display: inline-flex; align-items: center; gap: 6px; color: #66BFFF; font-size: 17px; }
+
+/* SCROLL CUE */
+.scroll-cue { margin-top: 56px; display: inline-flex; align-items: center; gap: 8px; color: var(--dim); font-size: 13px; }
+.scroll-cue::after { content: '↓'; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+/* CTA */
+.cta-band { padding: 100px 0; text-align: center; }
+.cta-band h2 { font-size: clamp(36px, 5vw, 64px); letter-spacing: -0.035em; line-height: 1.1; font-weight: 700; max-width: 820px; margin-left: auto; margin-right: auto; }
+.cta-band .btn-pill { display: inline-block; margin-top: 30px; padding: 14px 32px; border-radius: 100px; background: var(--accent); color: white; font-weight: 500; font-size: 16px; transition: var(--t); }
+.cta-band .btn-pill:hover { background: #0077E6; transform: translateY(-1px); }
+
+/* FOOTER */
+footer { background: var(--bg-2); padding: 36px 0 28px; border-top: 1px solid var(--line); }
+footer .row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--dim); }
+
+/* REVEAL */
+.r { opacity: 0; transform: translateY(24px); transition: opacity 800ms var(--easing), transform 800ms var(--easing); }
+.r.in { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  .specs-row { grid-template-columns: repeat(2, 1fr); }
+  .markets { grid-template-columns: 1fr; }
+  .device-closeup { grid-template-columns: 1fr; padding: 40px; gap: 32px; }
+  .nav-menu { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="nav-inner">
+    <span class="brand"><span class="dot"></span>SYNAPEX</span>
+    <span class="nav-menu">
+      <a href="#vision">Vision</a>
+      <a href="#device">Device</a>
+      <a href="#markets">Markets</a>
+      <a href="#contact">Contact</a>
+    </span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="eyebrow">SYNAPEX Glass</div>
+    <h1>Reach your peak.<br/><span class="light">Hands-free.</span></h1>
+    <p class="tagline">Cognitive Agentic AI를 안경에 담았습니다. 일상 속에서 뇌파를 읽고, 매 순간 최고 상태로 안내합니다.</p>
+    <div class="hero-actions">
+      <a href="#device">자세히 보기 →</a>
+      <a href="mailto:hello@synapex.ai">데모 신청 →</a>
+    </div>
+    <div class="hero-device">
+      <!-- EEG Glasses inline SVG -->
+      <svg viewBox="0 0 900 460" fill="none">
+        <defs>
+          <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2A2A2D"/>
+            <stop offset="1" stop-color="#0E0E10"/>
+          </linearGradient>
+          <linearGradient id="lens" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3A4A60" stop-opacity="0.85"/>
+            <stop offset="1" stop-color="#1A2235" stop-opacity="0.95"/>
+          </linearGradient>
+          <radialGradient id="lensShine" cx="0.3" cy="0.25" r="0.4">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.35"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Left arm -->
+        <path d="M 70 220 Q 100 215, 160 218 L 200 220" stroke="url(#frame)" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <!-- Right arm -->
+        <path d="M 830 220 Q 800 215, 740 218 L 700 220" stroke="url(#frame)" stroke-width="12" stroke-linecap="round" fill="none"/>
+
+        <!-- Left lens housing -->
+        <rect x="180" y="160" width="240" height="160" rx="46" fill="url(#frame)"/>
+        <rect x="194" y="174" width="212" height="132" rx="36" fill="url(#lens)"/>
+        <rect x="194" y="174" width="212" height="132" rx="36" fill="url(#lensShine)"/>
+
+        <!-- Bridge -->
+        <path d="M 420 240 L 480 240" stroke="url(#frame)" stroke-width="14" stroke-linecap="round"/>
+
+        <!-- Right lens housing -->
+        <rect x="480" y="160" width="240" height="160" rx="46" fill="url(#frame)"/>
+        <rect x="494" y="174" width="212" height="132" rx="36" fill="url(#lens)"/>
+        <rect x="494" y="174" width="212" height="132" rx="36" fill="url(#lensShine)"/>
+
+        <!-- EEG sensor nodes on temples -->
+        <g>
+          <circle cx="200" cy="200" r="6" fill="#0066CC">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="200" cy="200" r="14" fill="none" stroke="#0066CC" stroke-width="1.5" opacity="0.4"/>
+        </g>
+        <g>
+          <circle cx="700" cy="200" r="6" fill="#0066CC">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" begin="0.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="700" cy="200" r="14" fill="none" stroke="#0066CC" stroke-width="1.5" opacity="0.4"/>
+        </g>
+
+        <!-- Forehead sensor strip -->
+        <g>
+          <circle cx="350" cy="172" r="4" fill="#0066CC">
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="450" cy="168" r="4" fill="#0066CC">
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="550" cy="172" r="4" fill="#0066CC">
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+
+        <!-- Tiny logo on left arm -->
+        <text x="120" y="225" font-family="Inter, sans-serif" font-size="9" fill="#86868B" letter-spacing="2" font-weight="700">SYNAPEX</text>
+      </svg>
+    </div>
+    <span class="scroll-cue">Scroll to see how it thinks</span>
+  </div>
+</section>
+
+<!-- VISION DARK -->
+<section class="full dark" id="vision">
+  <div class="container">
+    <h2>측정 가능한 것만이 <b>개선 가능합니다.</b></h2>
+    <p class="sub">우리는 뇌의 신호를 읽어 인간이 자신의 최고 상태에 도달하도록 돕습니다. 학원·임원·스포츠에서 시작해 의사결정과 보험의 미래까지.</p>
+    <div class="specs-row">
+      <div class="spec-item r"><div class="num">256<span>Hz</span></div><div class="lbl">Sampling</div></div>
+      <div class="spec-item r"><div class="num">80<span>ms</span></div><div class="lbl">Latency</div></div>
+      <div class="spec-item r"><div class="num">14<span>h</span></div><div class="lbl">Battery</div></div>
+      <div class="spec-item r"><div class="num">38<span>g</span></div><div class="lbl">Weight</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEVICE CLOSEUP -->
+<section class="full" id="device">
+  <div class="container">
+    <h2>Six EEG sensors. <b class="cool">One agent.</b></h2>
+    <p class="sub">관자놀이의 dry electrode와 이마 라인의 micro-sensor가 매 초 brain state를 읽고, AI 에이전트가 개입을 결정합니다.</p>
+    <div class="device-closeup r">
+      <div class="vis">
+        <svg viewBox="0 0 480 320" fill="none">
+          <defs>
+            <linearGradient id="frame2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3A3A3D"/>
+              <stop offset="1" stop-color="#0E0E10"/>
+            </linearGradient>
+            <linearGradient id="lens2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3A4A60" stop-opacity="0.85"/>
+              <stop offset="1" stop-color="#1A2235" stop-opacity="0.95"/>
+            </linearGradient>
+          </defs>
+          <rect x="60" y="100" width="160" height="120" rx="36" fill="url(#frame2)"/>
+          <rect x="72" y="112" width="136" height="96" rx="28" fill="url(#lens2)"/>
+          <path d="M 220 160 L 260 160" stroke="url(#frame2)" stroke-width="12" stroke-linecap="round"/>
+          <rect x="260" y="100" width="160" height="120" rx="36" fill="url(#frame2)"/>
+          <rect x="272" y="112" width="136" height="96" rx="28" fill="url(#lens2)"/>
+
+          <g>
+            <circle cx="70" cy="130" r="5" fill="#66BFFF"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite"/></circle>
+            <circle cx="410" cy="130" r="5" fill="#66BFFF"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" begin="0.4s" repeatCount="indefinite"/></circle>
+            <circle cx="160" cy="92" r="3" fill="#66BFFF"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.2s" repeatCount="indefinite"/></circle>
+            <circle cx="240" cy="86" r="3" fill="#66BFFF"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
+            <circle cx="320" cy="92" r="3" fill="#66BFFF"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.8s" repeatCount="indefinite"/></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="txt">
+        <h3>The Glass that listens to your mind.</h3>
+        <p>이전 세대의 EEG 헤드밴드를 안경 폼팩터로 재해석했습니다. 회의실에서도, 운동 중에도, 강의실에서도 자연스럽게.</p>
+        <a class="link" href="#contact">자세한 사양 확인 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section class="full" id="markets">
+  <div class="container">
+    <h2>Designed for the moments that <b class="cool">matter most.</b></h2>
+    <div class="markets">
+      <div class="market-card r">
+        <div>
+          <div class="label">For Executives</div>
+          <h3>The decision desk.</h3>
+        </div>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 32 8 L 32 16 M 28 12 L 36 12"/>
+            <path d="M 24 20 L 40 20 L 36 32 L 28 32 Z"/>
+            <rect x="22" y="32" width="20" height="6" rx="1"/>
+            <path d="M 22 38 L 18 50 L 46 50 L 42 38"/>
+            <line x1="14" y1="54" x2="50" y2="54"/>
+          </svg>
+        </div>
+      </div>
+      <div class="market-card dark r">
+        <div>
+          <div class="label">For Athletes</div>
+          <h3>The 0.3-second edge.</h3>
+        </div>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 18 14 L 46 14 L 46 26 C 46 34 40 40 32 40 C 24 40 18 34 18 26 Z"/>
+            <path d="M 18 18 L 10 18 L 10 24 C 10 28 14 30 18 30"/>
+            <path d="M 46 18 L 54 18 L 54 24 C 54 28 50 30 46 30"/>
+            <line x1="32" y1="40" x2="32" y2="48"/>
+            <rect x="22" y="48" width="20" height="6" rx="1" fill="#FFB547" stroke="#FFB547"/>
+          </svg>
+        </div>
+      </div>
+      <div class="market-card dark r">
+        <div>
+          <div class="label">For Students</div>
+          <h3>Focus, by signal.</h3>
+        </div>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="14" y="10" width="32" height="44" rx="2"/>
+            <line x1="20" y1="20" x2="40" y2="20"/>
+            <line x1="20" y1="28" x2="36" y2="28"/>
+            <line x1="20" y1="36" x2="40" y2="36"/>
+            <path d="M 22 46 L 28 50 L 38 40" stroke="#FFB547"/>
+          </svg>
+        </div>
+      </div>
+      <div class="market-card r">
+        <div>
+          <div class="label">For Researchers</div>
+          <h3>The data, in real time.</h3>
+        </div>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64" fill="none" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="32" cy="32" r="22"/>
+            <circle cx="32" cy="32" r="14"/>
+            <circle cx="32" cy="32" r="6" fill="#0066CC" stroke="none"/>
+            <line x1="32" y1="2" x2="32" y2="10"/>
+            <line x1="32" y1="54" x2="32" y2="62"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band" id="contact">
+  <div class="container">
+    <h2>Train the brain behind your best decisions.</h2>
+    <a class="btn-pill" href="mailto:hello@synapex.ai?subject=Demo Request">데모 신청하기</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container row">
+    <span>© 2026 SYNAPEX, Inc. · Cognitive Agentic AI</span>
+    <span>VARIANT_03 · APPLE · LIGHT TWO-TONE</span>
+  </div>
+</footer>
+
+<script>
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+  document.querySelectorAll('.r').forEach(el => io.observe(el));
+} else { document.querySelectorAll('.r').forEach(el => el.classList.add('in')); }
+
+// subtle parallax on hero device
+const dev = document.querySelector('.hero-device svg');
+if (dev && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  addEventListener('scroll', () => {
+    const y = scrollY * 0.08;
+    dev.style.transform = `translateY(${-y}px)`;
+  }, { passive: true });
+}
+</script>
+</body>
+</html>
