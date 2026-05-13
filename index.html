@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SYNAPEX — Read your brain. Reach your peak.</title>
+<meta name="description" content="EEG 헤드밴드와 AI 에이전트가 결합된 단 하나의 Cognitive Agentic AI 코치. 매 초 인지 상태를 추론하고, 자동으로 개입합니다." />
+<meta property="og:title" content="SYNAPEX — Read your brain. Reach your peak." />
+<meta property="og:description" content="Cognitive Agentic AI × EEG. 학원·임원·스포츠부터 보험 혁신까지." />
+<meta property="og:image" content="img/og/cover.svg" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/svg+xml" href="img/logo/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+<style>
+:root {
+  --bg: #06060A;
+  --bg-2: #0B0B14;
+  --glass: rgba(255,255,255,0.05);
+  --glass-strong: rgba(255,255,255,0.10);
+  --line: rgba(255,255,255,0.08);
+  --line-2: rgba(255,255,255,0.16);
+  --txt: #F5F5FC;
+  --dim: #9095AD;
+  --muted: #5A6075;
+  --c1: #00E5FF;
+  --c2: #9D5BFF;
+  --c3: #FF5BBF;
+  --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t: 280ms var(--easing);
+  --maxw: 1200px;
+  --pad: 24px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--txt);
+  font-family: 'Inter', 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; line-height: 1.5;
+  position: relative; overflow-x: hidden; min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+::selection { background: var(--c1); color: var(--bg); }
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); position: relative; z-index: 2; }
+
+/* ============= AMBIENT BG ============= */
+.bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.blob { position: absolute; border-radius: 50%; filter: blur(110px); }
+.blob.b1 { width: 720px; height: 720px; top: -220px; left: -180px; background: radial-gradient(circle, var(--c1), transparent 60%); opacity: 0.55; animation: drift1 22s ease-in-out infinite; }
+.blob.b2 { width: 820px; height: 820px; top: 28%; right: -200px; background: radial-gradient(circle, var(--c2), transparent 60%); opacity: 0.50; animation: drift2 26s ease-in-out infinite; }
+.blob.b3 { width: 620px; height: 620px; bottom: -200px; left: 30%; background: radial-gradient(circle, var(--c3), transparent 60%); opacity: 0.32; animation: drift3 30s ease-in-out infinite; }
+@keyframes drift1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(80px,40px) scale(1.1); } }
+@keyframes drift2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-60px,-30px) scale(1.05); } }
+@keyframes drift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(40px,-60px) scale(1.08); } }
+
+/* Mouse spotlight (전역) */
+.spotlight { position: fixed; inset: 0; z-index: 1; pointer-events: none; transition: background 100ms linear; }
+@media (hover: hover) {
+  .spotlight { background: radial-gradient(700px at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.05), transparent 65%); }
+}
+
+/* Grain noise */
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.04; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* ============= NAV ============= */
+nav.top {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+  z-index: 50; padding: 7px 7px 7px 22px;
+  border-radius: 100px;
+  display: flex; align-items: center; gap: 24px;
+  background: rgba(11,11,20,0.55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--line-2);
+  transition: var(--t);
+}
+.brand { font-weight: 700; letter-spacing: 0.06em; font-size: 14px; display: flex; align-items: center; gap: 9px; }
+.brand .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--c1); box-shadow: 0 0 14px var(--c1); animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(0.85); } }
+.nav-menu { display: flex; gap: 22px; }
+.nav-menu a { font-size: 13px; color: var(--dim); transition: color var(--t); }
+.nav-menu a:hover { color: var(--txt); }
+.cta-nav { padding: 9px 18px; border-radius: 100px; font-size: 13px; font-weight: 600; background: linear-gradient(135deg, var(--c1), var(--c2)); color: var(--bg); transition: var(--t); }
+.cta-nav:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(0,229,255,0.35); }
+.menu-toggle { display: none; padding: 8px; color: var(--txt); }
+
+/* ============= COMMON ============= */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 600;
+  padding: 6px 14px; border: 1px solid var(--line-2); border-radius: 100px;
+  background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: var(--dim);
+}
+.eyebrow b { background: linear-gradient(90deg, var(--c1), var(--c2)); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+.eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--c1); box-shadow: 0 0 10px var(--c1); }
+
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 14px 26px; border-radius: 100px; font-size: 14px; font-weight: 600; transition: var(--t); white-space: nowrap; }
+.btn-grad { background: linear-gradient(135deg, var(--c1), var(--c2)); color: var(--bg); }
+.btn-grad:hover { transform: translateY(-1px); box-shadow: 0 14px 36px rgba(0,229,255,0.42); }
+.btn-glass { background: var(--glass); border: 1px solid var(--line-2); color: var(--txt); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.btn-glass:hover { background: var(--glass-strong); border-color: var(--c1); }
+
+.grad-text { background: linear-gradient(135deg, var(--c1), var(--c2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.grad-text-3 { background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 50%, var(--c3) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; animation: hue 10s linear infinite; }
+@keyframes hue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
+/* ============= HERO ============= */
+.hero { padding: 170px 0 90px; text-align: center; position: relative; }
+.hero h1 { font-size: clamp(48px, 9vw, 120px); line-height: 1.0; letter-spacing: -0.04em; font-weight: 800; margin-top: 22px; }
+.hero h1 .b2 { display: block; }
+.hero p.lead { margin-top: 26px; font-size: 19px; color: var(--dim); max-width: 640px; margin-left: auto; margin-right: auto; line-height: 1.55; }
+.hero p.lead-ko { margin-top: 10px; font-size: 15px; color: var(--muted); max-width: 640px; margin-left: auto; margin-right: auto; }
+.hero-cta { margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.scroll-hint { margin-top: 50px; font-size: 11.5px; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+.scroll-hint::after { content: ' ↓'; animation: bob 1.8s ease-in-out infinite; display: inline-block; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+/* ============= 360 DEVICE — CSS 3D CUBE FACES ============= */
+.device-360-wrap { margin: 56px auto 0; width: 100%; max-width: 720px; aspect-ratio: 16 / 10; position: relative; perspective: 1400px; }
+.device-360-wrap::before {
+  content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: 70%; height: 60%; border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c1));
+  filter: blur(80px); opacity: 0.55;
+  animation: rotbg 18s linear infinite;
+}
+@keyframes rotbg { 0% { transform: translate(-50%,-50%) rotate(0deg); } 100% { transform: translate(-50%,-50%) rotate(360deg); } }
+.device-cube {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  animation: spin360 14s linear infinite;
+  --spin-pause: 0;
+}
+.device-cube:hover { animation-play-state: paused; }
+@keyframes spin360 {
+  0%   { transform: rotateY(0deg) rotateX(8deg); }
+  100% { transform: rotateY(360deg) rotateX(8deg); }
+}
+.face {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  backface-visibility: visible;
+  filter: drop-shadow(0 30px 50px rgba(0,229,255,0.30));
+}
+.face.front { transform: rotateY(0deg)   translateZ(80px); }
+.face.right { transform: rotateY(90deg)  translateZ(80px); }
+.face.back  { transform: rotateY(180deg) translateZ(80px); }
+.face.left  { transform: rotateY(-90deg) translateZ(80px); }
+.face svg { width: 88%; max-width: 560px; }
+
+/* ============= LIVE BAND (canvas section) ============= */
+.live-band { padding: 100px 0 60px; }
+.live-card {
+  border-radius: 28px;
+  background: var(--glass); border: 1px solid var(--line-2);
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 36px; overflow: hidden; position: relative;
+}
+.live-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,229,255,0.06), transparent 60%); pointer-events: none; }
+.live-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 32px; align-items: center; position: relative; z-index: 1; }
+.live-info h3 { font-size: clamp(24px, 2.6vw, 36px); letter-spacing: -0.02em; font-weight: 700; line-height: 1.15; }
+.live-info p { margin-top: 12px; font-size: 15px; color: var(--dim); line-height: 1.6; }
+.live-chips { margin-top: 22px; display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.10em;
+  padding: 6px 12px; border-radius: 100px;
+  background: rgba(255,255,255,0.04); color: var(--dim); border: 1px solid var(--line-2);
+  transition: var(--t);
+}
+.chip.active { background: rgba(0,229,255,0.12); color: var(--c1); border-color: rgba(0,229,255,0.45); box-shadow: 0 0 18px rgba(0,229,255,0.25); }
+.live-canvas-wrap { aspect-ratio: 2 / 1; border-radius: 16px; background: rgba(0,0,0,0.4); border: 1px solid var(--line); overflow: hidden; position: relative; }
+.live-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+.live-canvas-wrap .label { position: absolute; top: 12px; left: 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--c1); text-shadow: 0 0 12px rgba(0,229,255,0.5); }
+.live-canvas-wrap .freq { position: absolute; top: 12px; right: 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--muted); }
+
+/* ============= SECTIONS ============= */
+section.sec { padding: 110px 0; position: relative; }
+.sec-head { text-align: center; max-width: 760px; margin: 0 auto 56px; }
+.sec-head h2 { font-size: clamp(34px, 5vw, 64px); letter-spacing: -0.025em; font-weight: 700; line-height: 1.1; margin-top: 16px; }
+.sec-head p { margin-top: 16px; color: var(--dim); font-size: 17px; }
+
+/* ============= FEATURES ============= */
+.feat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.glass-card {
+  position: relative; padding: 28px 24px;
+  background: var(--glass); border: 1px solid var(--line-2);
+  border-radius: 22px;
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  overflow: hidden; transition: var(--t);
+}
+.glass-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 50%); pointer-events: none; }
+.glass-card:hover { transform: translateY(-3px); border-color: var(--c1); background: rgba(0,229,255,0.06); }
+.glass-card .icon-wrap {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  display: grid; place-items: center; margin-bottom: 20px;
+  box-shadow: 0 10px 28px rgba(0,229,255,0.30);
+}
+.glass-card .icon-wrap svg { width: 22px; height: 22px; }
+.glass-card h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.glass-card p { margin-top: 10px; font-size: 14px; color: var(--dim); line-height: 1.55; }
+
+/* ============= PRODUCT SHOWCASE (360 large) ============= */
+.show-wrap {
+  padding: 60px;
+  background: var(--glass); border: 1px solid var(--line-2);
+  border-radius: 32px;
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center;
+}
+.show-wrap::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,229,255,0.06), transparent 60%); pointer-events: none; }
+.show-360 {
+  position: relative; aspect-ratio: 4 / 3; perspective: 1400px;
+}
+.show-360::before {
+  content: ''; position: absolute; inset: 14%; border-radius: 50%;
+  background: conic-gradient(from 90deg, var(--c1), var(--c2), var(--c1));
+  filter: blur(60px); opacity: 0.55;
+  animation: rotbg 16s linear infinite;
+}
+.show-cube {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  animation: spin360-slow 22s linear infinite;
+}
+@keyframes spin360-slow {
+  0% { transform: rotateY(0deg) rotateX(6deg); }
+  100% { transform: rotateY(360deg) rotateX(6deg); }
+}
+.show-360 .face { filter: drop-shadow(0 30px 60px rgba(157,91,255,0.4)); }
+.show-360 .face.front { transform: rotateY(0deg)   translateZ(100px); }
+.show-360 .face.right { transform: rotateY(90deg)  translateZ(100px); }
+.show-360 .face.back  { transform: rotateY(180deg) translateZ(100px); }
+.show-360 .face.left  { transform: rotateY(-90deg) translateZ(100px); }
+
+.show-text h3 { font-size: clamp(28px, 3.5vw, 44px); letter-spacing: -0.025em; line-height: 1.15; font-weight: 700; }
+.show-text p { margin-top: 16px; color: var(--dim); font-size: 16px; line-height: 1.6; }
+.show-text .stats { margin-top: 28px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.show-text .stat { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,0.025); }
+.show-text .stat .v { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+.show-text .stat .v span { font-size: 0.55em; color: var(--dim); margin-left: 3px; }
+.show-text .stat .k { font-size: 11px; color: var(--dim); letter-spacing: 0.10em; text-transform: uppercase; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+
+/* ============= ABOUT / VISION ============= */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: stretch; }
+.statements > * + * { margin-top: 22px; }
+.stmt {
+  padding: 26px;
+  background: var(--glass); border: 1px solid var(--line-2);
+  border-radius: 20px;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  position: relative; overflow: hidden;
+}
+.stmt::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--c1), var(--c2)); }
+.stmt.vision::before { background: linear-gradient(180deg, var(--c2), var(--c3)); }
+.stmt .lbl { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
+.stmt .body { margin-top: 10px; font-size: 18px; line-height: 1.55; font-weight: 500; }
+
+.pillars { display: grid; gap: 14px; }
+.pillar {
+  padding: 22px;
+  background: var(--glass); border: 1px solid var(--line);
+  border-radius: 18px;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  transition: var(--t);
+}
+.pillar:hover { border-color: var(--line-2); transform: translateX(4px); }
+.pillar .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.12em; }
+.pillar .num.n1 { color: var(--c1); }
+.pillar .num.n2 { color: var(--c2); }
+.pillar .num.n3 { color: var(--c3); }
+.pillar h4 { margin-top: 8px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.pillar p { margin-top: 8px; font-size: 13.5px; color: var(--dim); line-height: 1.55; }
+
+/* ============= ROADMAP ============= */
+.roadmap-card {
+  padding: 40px;
+  background: var(--glass); border: 1px solid var(--line-2);
+  border-radius: 24px;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.timeline { display: flex; align-items: center; gap: 8px; }
+.ph { flex: 1; text-align: center; padding-bottom: 36px; position: relative; }
+.ph::before { content: ''; position: absolute; bottom: 12px; left: 50%; width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.18); transform: translateX(-50%); transition: var(--t); }
+.ph.now::before { background: var(--c1); box-shadow: 0 0 18px var(--c1); }
+.ph.apex::before { background: linear-gradient(135deg, var(--c1), var(--c3)); width: 18px; height: 18px; bottom: 9px; box-shadow: 0 0 24px rgba(255,91,191,0.7); }
+.ph .lbl { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+.ph .sub { font-size: 10.5px; color: var(--dim); margin-top: 4px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; }
+.ph.now .lbl { color: var(--c1); }
+.ph.apex .lbl { background: linear-gradient(135deg, var(--c1), var(--c3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tl-line { flex: 0 0 auto; width: 32px; height: 1px; background: linear-gradient(90deg, transparent, var(--line-2), transparent); }
+
+/* ============= PRICING ============= */
+.price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.price-card {
+  padding: 36px;
+  background: var(--glass); border: 1px solid var(--line-2);
+  border-radius: 24px;
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  position: relative; overflow: hidden;
+  transition: var(--t);
+}
+.price-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 50%); pointer-events: none; }
+.price-card:hover { transform: translateY(-3px); border-color: var(--c1); }
+.price-card.pro { border-color: rgba(0,229,255,0.35); background: linear-gradient(135deg, rgba(0,229,255,0.08), rgba(157,91,255,0.08)); }
+.price-card.pro:hover { border-color: var(--c2); }
+.price-tag {
+  position: absolute; top: 20px; right: 20px;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600;
+  padding: 4px 10px; border-radius: 100px;
+  background: linear-gradient(135deg, var(--c1), var(--c2)); color: var(--bg);
+}
+.price-card .name { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.price-card h3 { margin-top: 8px; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.price-card .who { margin-top: 6px; font-size: 14px; color: var(--dim); }
+.price-card .price { margin-top: 24px; display: flex; align-items: baseline; gap: 8px; }
+.price-card .price .num { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; }
+.price-card.pro .price .num { background: linear-gradient(135deg, var(--c1), var(--c2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.price-card .price .unit { color: var(--dim); font-size: 14px; }
+.price-card ul { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); list-style: none; display: grid; gap: 12px; }
+.price-card li { display: flex; gap: 12px; font-size: 14px; color: var(--txt); align-items: flex-start; }
+.price-card li::before { content: ''; flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,229,255,0.15); border: 1px solid var(--c1); margin-top: 1px; display: grid; place-items: center; background-image: linear-gradient(135deg, transparent 38%, var(--c1) 38%, var(--c1) 42%, transparent 42%, transparent 58%, var(--c1) 58%, var(--c1) 62%, transparent 62%); }
+.price-card .price-cta { margin-top: 28px; }
+.price-card .price-cta a { width: 100%; justify-content: center; }
+.price-card .note { margin-top: 14px; font-size: 12px; color: var(--muted); text-align: center; }
+
+/* ============= CONTACT ============= */
+.cta-band { padding: 110px 0; }
+.cta-card {
+  padding: 80px 40px; text-align: center;
+  background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(157,91,255,0.12));
+  border: 1px solid var(--line-2);
+  border-radius: 32px;
+  backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+  position: relative; overflow: hidden;
+}
+.cta-card::before { content: ''; position: absolute; inset: -50%; background: conic-gradient(from 0deg, transparent, var(--c1) 30%, transparent 60%); animation: rotbg 24s linear infinite; opacity: 0.20; }
+.cta-card > * { position: relative; z-index: 1; }
+.cta-card h2 { font-size: clamp(34px, 5vw, 64px); letter-spacing: -0.03em; font-weight: 700; line-height: 1.1; max-width: 760px; margin: 0 auto; }
+.cta-card p { margin-top: 16px; color: var(--dim); font-size: 17px; max-width: 580px; margin-left: auto; margin-right: auto; }
+.cta-card .btns { margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-card .info { margin-top: 48px; display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+.cta-card .info a:hover { color: var(--c1); }
+
+/* ============= FOOTER ============= */
+footer { padding: 56px 0 36px; border-top: 1px solid var(--line); margin-top: 60px; }
+.foot-row { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+.foot-brand { max-width: 320px; }
+.foot-brand .b { display: flex; align-items: center; gap: 9px; font-weight: 700; letter-spacing: 0.06em; font-size: 14px; }
+.foot-brand .b .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c1); box-shadow: 0 0 12px var(--c1); }
+.foot-brand p { margin-top: 12px; font-size: 13px; color: var(--dim); line-height: 1.6; }
+.foot-cols { display: flex; gap: 56px; flex-wrap: wrap; }
+.foot-col h5 { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); font-weight: 600; margin-bottom: 14px; }
+.foot-col ul { list-style: none; display: grid; gap: 9px; }
+.foot-col a { font-size: 13px; color: var(--dim); transition: color var(--t); }
+.foot-col a:hover { color: var(--txt); }
+.foot-bottom { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
+.foot-bottom .right { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.06em; }
+
+/* ============= REVEAL ============= */
+.r { opacity: 0; transform: translateY(20px); transition: opacity 800ms var(--easing), transform 800ms var(--easing); }
+.r.in { opacity: 1; transform: translateY(0); }
+
+/* ============= RESPONSIVE ============= */
+@media (max-width: 1024px) {
+  .feat-grid { grid-template-columns: repeat(2, 1fr); }
+  .show-wrap { grid-template-columns: 1fr; gap: 40px; padding: 40px; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .price-grid { grid-template-columns: 1fr; }
+  .live-grid { grid-template-columns: 1fr; }
+  .timeline { flex-wrap: wrap; gap: 16px; }
+  .ph { flex: 0 0 calc(33% - 16px); }
+  .tl-line { display: none; }
+}
+@media (max-width: 720px) {
+  .nav-menu { display: none; }
+  nav.top { left: 16px; right: 16px; transform: none; padding: 7px 7px 7px 18px; }
+  .hero { padding: 130px 0 60px; }
+  .feat-grid { grid-template-columns: 1fr; }
+  .cta-card { padding: 56px 24px; }
+  .live-card { padding: 24px; }
+  .show-wrap { padding: 28px; }
+  section.sec { padding: 80px 0; }
+  .ph { flex: 0 0 calc(50% - 8px); }
+  .foot-cols { gap: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="spotlight" id="spot"></div>
+<div class="grain"></div>
+
+<!-- ============= NAV ============= -->
+<nav class="top">
+  <span class="brand"><span class="pulse"></span>SYNAPEX</span>
+  <span class="nav-menu" id="navMenu">
+    <a href="#features">Features</a>
+    <a href="#product">Product</a>
+    <a href="#about">About</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </span>
+  <a class="cta-nav" href="#contact">Request Demo</a>
+</nav>
+
+<main>
+
+<!-- ============= HERO ============= -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow"><b>Cognitive Agentic AI</b> · EEG · Real-time</span>
+    <h1>Read your brain.<br/><span class="b2 grad-text-3">Reach your peak.</span></h1>
+    <p class="lead">The only AI that observes, reasons, and coaches on your neural signals.</p>
+    <p class="lead-ko">EEG 헤드밴드와 AI 에이전트가 결합된 단 하나의 집중 코치. 매 초 인지 상태를 읽고, 자동으로 개입합니다.</p>
+    <div class="hero-cta">
+      <a class="btn btn-grad" href="#contact">Request Demo →</a>
+      <a class="btn btn-glass" href="#product">Watch 360° →</a>
+    </div>
+
+    <!-- 360 DEVICE CUBE -->
+    <div class="device-360-wrap" aria-label="SYNAPEX headband 360 view">
+      <div class="device-cube" id="heroCube">
+        <!-- FRONT — full band with 4 sensors -->
+        <div class="face front">
+          <svg viewBox="0 0 480 280" fill="none">
+            <defs>
+              <linearGradient id="hb-front" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1A1430"/><stop offset="0.5" stop-color="#241948"/><stop offset="1" stop-color="#0E0A20"/>
+              </linearGradient>
+              <linearGradient id="hb-stripe" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#00E5FF"/><stop offset="0.5" stop-color="#9D5BFF"/><stop offset="1" stop-color="#FF5BBF"/>
+              </linearGradient>
+            </defs>
+            <path d="M 50 160 Q 240 60, 430 160 L 430 210 Q 240 110, 50 210 Z" fill="url(#hb-front)" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+            <path d="M 70 154 Q 240 68, 410 154" fill="none" stroke="url(#hb-stripe)" stroke-width="2.5"/>
+            <g>
+              <circle cx="120" cy="135" r="9" fill="#00E5FF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="120" cy="135" r="20" fill="none" stroke="#00E5FF" stroke-width="1.2" opacity="0.5"/>
+              <circle cx="200" cy="105" r="9" fill="#9D5BFF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.3s" repeatCount="indefinite"/></circle>
+              <circle cx="200" cy="105" r="20" fill="none" stroke="#9D5BFF" stroke-width="1.2" opacity="0.5"/>
+              <circle cx="280" cy="105" r="9" fill="#9D5BFF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.6s" repeatCount="indefinite"/></circle>
+              <circle cx="280" cy="105" r="20" fill="none" stroke="#9D5BFF" stroke-width="1.2" opacity="0.5"/>
+              <circle cx="360" cy="135" r="9" fill="#FF5BBF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.9s" repeatCount="indefinite"/></circle>
+              <circle cx="360" cy="135" r="20" fill="none" stroke="#FF5BBF" stroke-width="1.2" opacity="0.5"/>
+            </g>
+            <text x="240" y="194" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="5" fill="rgba(255,255,255,0.6)">SYNAPEX</text>
+          </svg>
+        </div>
+        <!-- RIGHT — slim profile -->
+        <div class="face right">
+          <svg viewBox="0 0 480 280" fill="none">
+            <defs>
+              <linearGradient id="hb-side" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#241948"/><stop offset="1" stop-color="#0E0A20"/>
+              </linearGradient>
+            </defs>
+            <rect x="180" y="120" width="120" height="40" rx="20" fill="url(#hb-side)" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+            <rect x="190" y="128" width="100" height="3" rx="1.5" fill="url(#hb-stripe)" opacity="0.8"/>
+            <circle cx="222" cy="140" r="5" fill="#9D5BFF" opacity="0.8"/>
+            <circle cx="258" cy="140" r="5" fill="#9D5BFF" opacity="0.8"/>
+            <text x="240" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="3" fill="rgba(255,255,255,0.4)">USB-C · BLE 5.2</text>
+          </svg>
+        </div>
+        <!-- BACK — flat band outline -->
+        <div class="face back">
+          <svg viewBox="0 0 480 280" fill="none">
+            <path d="M 50 160 Q 240 60, 430 160 L 430 210 Q 240 110, 50 210 Z" fill="url(#hb-front)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+            <path d="M 240 90 L 240 200" stroke="rgba(255,255,255,0.10)" stroke-dasharray="3 4"/>
+            <text x="240" y="218" text-anchor="middle" font-family="JetBrains Mono" font-size="9" letter-spacing="3" fill="rgba(255,255,255,0.4)">SYNAPEX · BAND v0.7</text>
+            <text x="240" y="234" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="2" fill="rgba(255,255,255,0.3)">MADE IN KOREA</text>
+          </svg>
+        </div>
+        <!-- LEFT — slim profile mirror -->
+        <div class="face left">
+          <svg viewBox="0 0 480 280" fill="none">
+            <rect x="180" y="120" width="120" height="40" rx="20" fill="url(#hb-side)" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+            <rect x="190" y="128" width="100" height="3" rx="1.5" fill="url(#hb-stripe)" opacity="0.8"/>
+            <circle cx="222" cy="140" r="5" fill="#00E5FF" opacity="0.8"/>
+            <circle cx="258" cy="140" r="5" fill="#00E5FF" opacity="0.8"/>
+            <text x="240" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="3" fill="rgba(255,255,255,0.4)">38g · 14h</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">Scroll to see how it thinks</div>
+  </div>
+</section>
+
+<!-- ============= LIVE BAND ============= -->
+<section class="live-band">
+  <div class="container">
+    <div class="live-card r">
+      <div class="live-grid">
+        <div class="live-info">
+          <h3>This is your <span class="grad-text">brain</span> at work.</h3>
+          <p>SYNAPEX 에이전트가 매 초 EEG 신호를 분석해 인지 상태를 분류합니다. 아래 라이브 시뮬레이션은 실제 디바이스 출력과 동일한 256Hz 흐름을 시각화합니다.</p>
+          <div class="live-chips" id="liveChips">
+            <span class="chip" data-s="HYPERFOCUSED">HYPERFOCUSED</span>
+            <span class="chip active" data-s="FOCUSED">FOCUSED</span>
+            <span class="chip" data-s="NEUTRAL">NEUTRAL</span>
+            <span class="chip" data-s="UNFOCUSED">UNFOCUSED</span>
+            <span class="chip" data-s="OVERLOADED">OVERLOADED</span>
+            <span class="chip" data-s="DROWSY">DROWSY</span>
+          </div>
+        </div>
+        <div class="live-canvas-wrap">
+          <span class="label">● LIVE</span>
+          <span class="freq" id="freqLabel">256 Hz · 4 ch</span>
+          <canvas id="eegCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= FEATURES ============= -->
+<section class="sec" id="features">
+  <div class="container">
+    <div class="sec-head r">
+      <span class="eyebrow">Features</span>
+      <h2>The only AI that <span class="grad-text">reads your brain state.</span></h2>
+      <p>측정 → 추론 → 개입. 단일 에이전트가 모두 처리합니다.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="glass-card r">
+        <div class="icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="#06060A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="3.5" fill="#06060A" stroke="none"/><path d="M 2 11 Q 11 4, 20 11 Q 11 18, 2 11 Z"/></svg></div>
+        <h3>Observe</h3>
+        <p>EEG 256Hz · 4채널 실시간 스트림 + 노이즈 자동 보정.</p>
+      </div>
+      <div class="glass-card r">
+        <div class="icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="#06060A" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="2" fill="#06060A" stroke="none"/><circle cx="4" cy="5" r="1.6" fill="#06060A" stroke="none"/><circle cx="18" cy="5" r="1.6" fill="#06060A" stroke="none"/><circle cx="4" cy="17" r="1.6" fill="#06060A" stroke="none"/><circle cx="18" cy="17" r="1.6" fill="#06060A" stroke="none"/><line x1="4" y1="5" x2="11" y2="11"/><line x1="18" y1="5" x2="11" y2="11"/><line x1="4" y1="17" x2="11" y2="11"/><line x1="18" y1="17" x2="11" y2="11"/></svg></div>
+        <h3>Reason</h3>
+        <p>LLM × Cognitive Profile이 6단계 상태를 매 초 분류.</p>
+      </div>
+      <div class="glass-card r">
+        <div class="icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="#06060A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M 3 11 L 15 11 M 12 8 L 15 11 L 12 14"/><circle cx="17" cy="11" r="2" fill="#06060A" stroke="none"/></svg></div>
+        <h3>Act</h3>
+        <p>난이도 조정·휴식·코치 알림까지 자동 개입.</p>
+      </div>
+      <div class="glass-card r">
+        <div class="icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="#06060A" stroke-width="2"><circle cx="11" cy="11" r="3" fill="#06060A" stroke="none"/><circle cx="11" cy="11" r="7" opacity="0.5"/><circle cx="11" cy="11" r="10" opacity="0.25"/></svg></div>
+        <h3>Personalize</h3>
+        <p>fMRI 기반 Cognitive Profile로 1인 1코치 수준 개인화.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= PRODUCT SHOWCASE 360 ============= -->
+<section class="sec" id="product">
+  <div class="container">
+    <div class="sec-head r">
+      <span class="eyebrow">The Device</span>
+      <h2>One band. <span class="grad-text">Four sensors.</span><br/>Zero friction.</h2>
+      <p>경량 헤드밴드 형태로 일상·학습·운동 중에도 자연스럽게 착용. 의료기기급 신호 품질을 38g에 담았습니다.</p>
+    </div>
+    <div class="show-wrap r">
+      <div class="show-360">
+        <div class="show-cube" id="showCube">
+          <div class="face front">
+            <svg viewBox="0 0 480 320" fill="none">
+              <path d="M 50 200 Q 240 90, 430 200 L 430 250 Q 240 140, 50 250 Z" fill="url(#hb-front)" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+              <path d="M 70 195 Q 240 100, 410 195" fill="none" stroke="url(#hb-stripe)" stroke-width="2.5"/>
+              <g>
+                <circle cx="125" cy="175" r="8" fill="#00E5FF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/></circle>
+                <circle cx="125" cy="175" r="18" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.5"/>
+                <circle cx="200" cy="148" r="8" fill="#9D5BFF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.3s" repeatCount="indefinite"/></circle>
+                <circle cx="200" cy="148" r="18" fill="none" stroke="#9D5BFF" stroke-width="1" opacity="0.5"/>
+                <circle cx="280" cy="148" r="8" fill="#9D5BFF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.6s" repeatCount="indefinite"/></circle>
+                <circle cx="280" cy="148" r="18" fill="none" stroke="#9D5BFF" stroke-width="1" opacity="0.5"/>
+                <circle cx="355" cy="175" r="8" fill="#FF5BBF"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.9s" repeatCount="indefinite"/></circle>
+                <circle cx="355" cy="175" r="18" fill="none" stroke="#FF5BBF" stroke-width="1" opacity="0.5"/>
+              </g>
+              <text x="240" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" letter-spacing="5" fill="rgba(255,255,255,0.6)">SYNAPEX</text>
+            </svg>
+          </div>
+          <div class="face right">
+            <svg viewBox="0 0 480 320" fill="none">
+              <rect x="180" y="140" width="120" height="44" rx="22" fill="url(#hb-side)" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+              <rect x="190" y="150" width="100" height="3" rx="1.5" fill="url(#hb-stripe)" opacity="0.8"/>
+              <circle cx="220" cy="162" r="5" fill="#9D5BFF" opacity="0.8"/>
+              <circle cx="260" cy="162" r="5" fill="#9D5BFF" opacity="0.8"/>
+              <text x="240" y="208" text-anchor="middle" font-family="JetBrains Mono" font-size="9" letter-spacing="3" fill="rgba(255,255,255,0.4)">USB-C · BLE 5.2</text>
+            </svg>
+          </div>
+          <div class="face back">
+            <svg viewBox="0 0 480 320" fill="none">
+              <path d="M 50 200 Q 240 90, 430 200 L 430 250 Q 240 140, 50 250 Z" fill="url(#hb-front)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+              <path d="M 240 120 L 240 240" stroke="rgba(255,255,255,0.10)" stroke-dasharray="3 4"/>
+              <text x="240" y="260" text-anchor="middle" font-family="JetBrains Mono" font-size="9" letter-spacing="3" fill="rgba(255,255,255,0.4)">SYNAPEX · BAND v0.7</text>
+              <text x="240" y="278" text-anchor="middle" font-family="JetBrains Mono" font-size="8" letter-spacing="2" fill="rgba(255,255,255,0.3)">FCC / KC PENDING</text>
+            </svg>
+          </div>
+          <div class="face left">
+            <svg viewBox="0 0 480 320" fill="none">
+              <rect x="180" y="140" width="120" height="44" rx="22" fill="url(#hb-side)" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+              <rect x="190" y="150" width="100" height="3" rx="1.5" fill="url(#hb-stripe)" opacity="0.8"/>
+              <circle cx="220" cy="162" r="5" fill="#00E5FF" opacity="0.8"/>
+              <circle cx="260" cy="162" r="5" fill="#00E5FF" opacity="0.8"/>
+              <text x="240" y="208" text-anchor="middle" font-family="JetBrains Mono" font-size="9" letter-spacing="3" fill="rgba(255,255,255,0.4)">38g · 14h</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="show-text">
+        <h3>Engineered for the room <span class="grad-text">where decisions matter.</span></h3>
+        <p>4채널 dry electrode + 24-bit ADC가 의료기기급 SNR을 보장합니다. 학원 · 임원 · 프로 스포츠 환경에서 검증된 폼팩터.</p>
+        <div class="stats">
+          <div class="stat"><div class="v">256<span>Hz</span></div><div class="k">Sampling</div></div>
+          <div class="stat"><div class="v">80<span>ms</span></div><div class="k">Latency</div></div>
+          <div class="stat"><div class="v">14<span>h</span></div><div class="k">Battery</div></div>
+          <div class="stat"><div class="v">38<span>g</span></div><div class="k">Weight</div></div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top: 24px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.12em;">
+      ※ 디바이스 360° 모델은 CSS 3D 시뮬레이션입니다. 실물 360° mp4 / Lottie는 별도 발주 예정.
+    </p>
+  </div>
+</section>
+
+<!-- ============= ABOUT / VISION ============= -->
+<section class="sec" id="about">
+  <div class="container">
+    <div class="sec-head r">
+      <span class="eyebrow">Our Why</span>
+      <h2>We measure <span class="grad-text">what others guess.</span></h2>
+      <p>SYNAPEX는 신경과학·AI·행동경제가 만나는 지점에서, 인간의 최고 상태를 측정 가능하게 만들기 위해 존재합니다.</p>
+    </div>
+    <div class="about-grid">
+      <div class="statements r">
+        <div class="stmt">
+          <div class="lbl">Mission</div>
+          <p class="body">우리는 뇌의 신호를 읽어, 인간이 자신의 최고 상태에 도달하도록 돕는다.</p>
+        </div>
+        <div class="stmt vision">
+          <div class="lbl">Vision</div>
+          <p class="body">인간의 의사결정과 위험 감수를 측정 가능한 과학으로 만들어, 보험과 헬스케어의 패러다임을 다시 쓴다.</p>
+        </div>
+        <div class="stmt" style="background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(157,91,255,0.06));">
+          <div class="lbl">Manifesto</div>
+          <p class="body" style="font-style: italic; line-height: 1.5;">"기존 AI 에이전트는 텍스트와 도구를 읽는다. <span class="grad-text">SYNAPEX는 뇌 상태를 읽는다.</span>"</p>
+        </div>
+      </div>
+      <div class="pillars r">
+        <div class="pillar">
+          <div class="num n1">01 · SCIENTIFIC</div>
+          <h4>신뢰는 절제에서, 권위는 데이터에서.</h4>
+          <p>"기적"이라는 단어를 쓰지 않습니다. 모든 주장에는 수치·표본·출처가 따라붙습니다.</p>
+        </div>
+        <div class="pillar">
+          <div class="num n2">02 · ASPIRATIONAL</div>
+          <h4>측정한다 — 그것이 더 멀리 가는 방법이다.</h4>
+          <p>수면·집중·결정은 직관이 아닌 신호입니다. 측정 가능한 것만이 개선 가능합니다.</p>
+        </div>
+        <div class="pillar">
+          <div class="num n3">03 · HUMAN</div>
+          <h4>에이전트가 결정하지 않는다 — 결정을 더 잘하게 만든다.</h4>
+          <p>최종 권한은 늘 인간에게. AI는 신호를 읽고 맥락을 더할 뿐입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= ROADMAP ============= -->
+<section class="sec" id="roadmap">
+  <div class="container">
+    <div class="sec-head r">
+      <span class="eyebrow">Roadmap</span>
+      <h2>From focus to <span class="grad-text-3">underwriting risk itself.</span></h2>
+      <p>집중 훈련에서 출발해 수면·의사결정·fMRI 연구·보험 혁신까지 — 5단계로 신경 데이터를 자산화합니다.</p>
+    </div>
+    <div class="roadmap-card r">
+      <div class="timeline">
+        <div class="ph now"><div class="lbl">Focus</div><div class="sub">PHASE 01 · NOW</div></div>
+        <div class="tl-line"></div>
+        <div class="ph"><div class="lbl">Wellness</div><div class="sub">PHASE 02</div></div>
+        <div class="tl-line"></div>
+        <div class="ph"><div class="lbl">NeuroEcon</div><div class="sub">PHASE 03</div></div>
+        <div class="tl-line"></div>
+        <div class="ph"><div class="lbl">fMRI Lab</div><div class="sub">PHASE 04</div></div>
+        <div class="tl-line"></div>
+        <div class="ph apex"><div class="lbl">Insurance ★</div><div class="sub">PHASE 05 · APEX</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= PRICING ============= -->
+<section class="sec" id="pricing">
+  <div class="container">
+    <div class="sec-head r">
+      <span class="eyebrow">Pricing</span>
+      <h2>One band. <span class="grad-text">Two tiers.</span></h2>
+      <p>개인 사용자부터 학원·임원·스포츠 팀까지. 같은 디바이스, 다른 깊이.</p>
+    </div>
+    <div class="price-grid">
+      <!-- Personal -->
+      <article class="price-card r">
+        <div class="name">SYNAPEX Personal</div>
+        <h3>일반 사용자용 · Daily Focus Band</h3>
+        <p class="who">학습자 · 직장인 · 개인 셀프 트레이닝</p>
+        <div class="price">
+          <span class="num">₩49,000</span>
+          <span class="unit">/ 월 (디바이스 포함, 24개월 약정 시)</span>
+        </div>
+        <ul>
+          <li>SYNAPEX Band (4ch · 256Hz)</li>
+          <li>6-state cognitive tracking</li>
+          <li>일일 인사이트 리포트</li>
+          <li>모바일 앱 (iOS · Android)</li>
+          <li>1-user 라이선스</li>
+        </ul>
+        <div class="price-cta"><a class="btn btn-glass" href="mailto:hello@synapex.ai?subject=Personal Pre-order" style="width:100%;justify-content:center;">사전 예약 →</a></div>
+        <p class="note">2026 Q4 출시 예정 · 사전 예약은 우선 배송</p>
+      </article>
+
+      <!-- Pro -->
+      <article class="price-card pro r">
+        <span class="price-tag">Recommended</span>
+        <div class="name">SYNAPEX Professional</div>
+        <h3>전문가용 · Pro Cognitive Suite</h3>
+        <p class="who">학원 · 임원 · 프로 스포츠 · 연구기관</p>
+        <div class="price">
+          <span class="num">Custom</span>
+          <span class="unit">/ 시트당 협의 · 디바이스 단위 견적</span>
+        </div>
+        <ul>
+          <li>Pro Band (8ch · 256Hz · 의료기기급 SNR)</li>
+          <li>Cognitive Agent API + 멀티시트 대시보드</li>
+          <li>fMRI Cognitive Profile 통합</li>
+          <li>실시간 개입 자동화 (난이도·휴식·코치 알림)</li>
+          <li>전담 CS + 24h SLA</li>
+          <li>커스텀 트레이닝 프로그램 설계</li>
+        </ul>
+        <div class="price-cta"><a class="btn btn-grad" href="mailto:ir@synapex.ai?subject=Professional Inquiry" style="width:100%;justify-content:center;">기관 견적 문의 →</a></div>
+        <p class="note">학원·기업·팀 단위 협의 · 최소 5시트</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============= CONTACT ============= -->
+<section class="cta-band" id="contact">
+  <div class="container">
+    <div class="cta-card r">
+      <h2>Train the brain behind your <span class="grad-text-3">best decisions.</span></h2>
+      <p>학원 · 임원 · 스포츠 · 연구 · 보험 — 어떤 시장이든 데모를 시작합니다.</p>
+      <div class="btns">
+        <a class="btn btn-grad" href="mailto:hello@synapex.ai?subject=Demo Request">Request Demo →</a>
+        <a class="btn btn-glass" href="mailto:ir@synapex.ai?subject=IR Inquiry">Download IR Deck</a>
+      </div>
+      <div class="info">
+        <a href="mailto:hello@synapex.ai">hello@synapex.ai</a>
+        <a href="mailto:ir@synapex.ai">ir@synapex.ai</a>
+        <span>Seoul · San Francisco (2027)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============= FOOTER ============= -->
+<footer>
+  <div class="container">
+    <div class="foot-row">
+      <div class="foot-brand">
+        <div class="b"><span class="dot"></span>SYNAPEX</div>
+        <p>Cognitive Agentic AI × EEG.<br/>The only AI that reads your brain state.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#product">The Band</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="mailto:ir@synapex.ai">Investors</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 SYNAPEX, Inc. · 본 페이지의 정보는 일반 안내 목적이며, 의료 진단·치료 목적의 사용은 별도 인증 절차에 따릅니다.</span>
+      <span class="right">v0.2 · GLASS · COGNITIVE_AGENTIC_AI</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== Mouse spotlight =====
+const spot = document.getElementById('spot');
+if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  addEventListener('mousemove', e => {
+    spot.style.setProperty('--mx', e.clientX + 'px');
+    spot.style.setProperty('--my', e.clientY + 'px');
+  });
+}
+
+// ===== Reveal on scroll =====
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll('.r').forEach(el => io.observe(el));
+} else { document.querySelectorAll('.r').forEach(el => el.classList.add('in')); }
+
+// ===== Glass card 3D tilt =====
+document.querySelectorAll('.glass-card, .price-card, .stmt, .pillar').forEach(c => {
+  c.addEventListener('mousemove', e => {
+    const r = c.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    c.style.transform = `translateY(-3px) perspective(900px) rotateX(${-y*4}deg) rotateY(${x*4}deg)`;
+  });
+  c.addEventListener('mouseleave', () => c.style.transform = '');
+});
+
+// ===== Scroll-bound rotation boost on hero device =====
+const heroCube = document.getElementById('heroCube');
+const showCube = document.getElementById('showCube');
+let lastScroll = scrollY;
+let extraRot = 0;
+addEventListener('scroll', () => {
+  const dy = scrollY - lastScroll;
+  lastScroll = scrollY;
+  extraRot += dy * 0.15;
+  if (heroCube) heroCube.style.setProperty('--scroll-rot', extraRot + 'deg');
+  if (showCube) showCube.style.setProperty('--scroll-rot', extraRot + 'deg');
+}, { passive: true });
+
+// ===== Live EEG canvas =====
+const canvas = document.getElementById('eegCanvas');
+const ctx = canvas.getContext('2d');
+function resize() {
+  const dpr = devicePixelRatio || 1;
+  canvas.width = canvas.offsetWidth * dpr;
+  canvas.height = canvas.offsetHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize(); addEventListener('resize', resize);
+const W = () => canvas.offsetWidth, H = () => canvas.offsetHeight;
+
+// 4 channel EEG simulation
+let currentState = 'FOCUSED';
+const stateProfiles = {
+  HYPERFOCUSED: { amp: 22, freq: 28, noise: 1.0 },
+  FOCUSED:      { amp: 14, freq: 18, noise: 1.5 },
+  NEUTRAL:      { amp: 10, freq: 12, noise: 2.5 },
+  UNFOCUSED:    { amp:  8, freq:  8, noise: 4.0 },
+  OVERLOADED:   { amp: 26, freq: 35, noise: 5.0 },
+  DROWSY:       { amp:  5, freq:  4, noise: 1.0 },
+};
+const channels = [
+  { color: 'rgba(0,229,255,0.95)', y: 0.20, phase: 0 },
+  { color: 'rgba(157,91,255,0.85)', y: 0.40, phase: 0.6 },
+  { color: 'rgba(157,91,255,0.75)', y: 0.60, phase: 1.2 },
+  { color: 'rgba(255,91,191,0.85)', y: 0.80, phase: 1.8 },
+];
+let t = 0;
+function drawEEG() {
+  ctx.fillStyle = 'rgba(6,6,10,0.18)';
+  ctx.fillRect(0, 0, W(), H());
+
+  const p = stateProfiles[currentState];
+  for (const ch of channels) {
+    ctx.beginPath();
+    ctx.strokeStyle = ch.color; ctx.lineWidth = 1.4;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let x = 0; x <= W(); x += 2) {
+      const baseY = H() * ch.y;
+      const sig = Math.sin((x / W()) * Math.PI * 2 * p.freq + t * 1.5 + ch.phase) * p.amp * 0.5;
+      const sig2 = Math.sin((x / W()) * Math.PI * 2 * (p.freq * 1.7) + t * 2.2 + ch.phase) * p.amp * 0.25;
+      const noise = (Math.random() - 0.5) * p.noise;
+      const y = baseY + sig + sig2 + noise;
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  t += 0.06;
+  requestAnimationFrame(drawEEG);
+}
+drawEEG();
+
+// ===== State chip toggle =====
+const chips = document.querySelectorAll('#liveChips .chip');
+chips.forEach(c => {
+  c.addEventListener('click', () => {
+    chips.forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    currentState = c.dataset.s;
+  });
+});
+
+// auto-cycle states every 6s (subtle demo)
+let stateIdx = 1;
+const stateNames = ['HYPERFOCUSED','FOCUSED','NEUTRAL','UNFOCUSED','OVERLOADED','DROWSY'];
+setInterval(() => {
+  stateIdx = (stateIdx + 1) % stateNames.length;
+  const next = stateNames[stateIdx];
+  chips.forEach(c => c.classList.toggle('active', c.dataset.s === next));
+  currentState = next;
+}, 6000);
+</script>
+
+<!--
+  SYNAPEX Landing v0.2 · Glassmorphism × Linear
+  - Two-tone: deep ink (#06060A) + cyan/violet/pink gradient
+  - 360° device: CSS3D cube with 4 distinct faces (front · right · back · left)
+  - Live EEG: 4-channel canvas simulation, state-driven amplitude/frequency
+  - Pricing: Personal (₩49k/mo) · Professional (Custom)
+  - About: Mission · Vision · Manifesto + 3 pillars (Scientific · Aspirational · Human)
+  - TODO: replace CSS3D cube with real Lottie/mp4 360° render when shipped
+-->
+
+</body>
+</html>

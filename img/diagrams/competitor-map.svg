@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Competitor Positioning Map">
+  <rect width="800" height="600" fill="#0A1A3A" />
+
+  <text x="40" y="44" fill="#F4F1EA" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="3">COMPETITOR POSITIONING MAP</text>
+
+  <g stroke="#5A6B85" stroke-width="1.5">
+    <line x1="100" y1="300" x2="720" y2="300" />
+    <line x1="400" y1="100" x2="400" y2="520" />
+  </g>
+  <path d="M 720 300 L 712 294 M 720 300 L 712 306" stroke="#5A6B85" stroke-width="1.5" fill="none" />
+  <path d="M 400 100 L 394 108 M 400 100 L 406 108" stroke="#5A6B85" stroke-width="1.5" fill="none" />
+
+  <text x="730" y="304" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13">B2B / Enterprise</text>
+  <text x="90" y="304" text-anchor="end" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13">B2C / Focus</text>
+  <text x="400" y="92" text-anchor="middle" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13">Agentic AI</text>
+  <text x="400" y="540" text-anchor="middle" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13">Passive App</text>
+
+  <text x="250" y="170" text-anchor="middle" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="11" opacity="0.4">B2C × Agentic</text>
+  <text x="550" y="170" text-anchor="middle" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="11" opacity="0.4">B2B × Agentic</text>
+  <text x="250" y="430" text-anchor="middle" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="11" opacity="0.4">B2C × Passive</text>
+  <text x="550" y="430" text-anchor="middle" fill="#5A6B85" font-family="'Helvetica Neue', Arial, sans-serif" font-size="11" opacity="0.4">B2B × Passive</text>
+
+  <g font-family="'Helvetica Neue', Arial, sans-serif" font-size="12">
+    <circle cx="200" cy="430" r="6" fill="#5A6B85" />
+    <text x="212" y="434" fill="#F4F1EA">Muse</text>
+    <circle cx="260" cy="470" r="6" fill="#5A6B85" />
+    <text x="272" y="474" fill="#F4F1EA">리솔</text>
+    <circle cx="310" cy="380" r="6" fill="#5A6B85" />
+    <text x="322" y="384" fill="#F4F1EA">Focus Mate</text>
+
+    <circle cx="500" cy="400" r="6" fill="#5A6B85" />
+    <text x="512" y="404" fill="#F4F1EA">룩시드랩스</text>
+    <circle cx="620" cy="430" r="6" fill="#5A6B85" />
+    <text x="632" y="434" fill="#F4F1EA">Emotiv</text>
+    <circle cx="540" cy="470" r="6" fill="#5A6B85" />
+    <text x="552" y="474" fill="#F4F1EA">왓슨앤컴퍼니</text>
+    <circle cx="640" cy="370" r="6" fill="#5A6B85" />
+    <text x="652" y="374" fill="#F4F1EA">뉴로핏</text>
+  </g>
+
+  <g transform="translate(580, 180)">
+    <circle r="58" fill="none" stroke="#FFB547" stroke-width="1" opacity="0.2" />
+    <circle r="38" fill="none" stroke="#FFB547" stroke-width="1.5" opacity="0.45" />
+    <circle r="14" fill="#FFB547" />
+    <text x="0" y="-72" text-anchor="middle" fill="#FFB547" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="700">★ SYNAPEX</text>
+    <text x="0" y="-52" text-anchor="middle" fill="#F4F1EA" font-family="'Helvetica Neue', Arial, sans-serif" font-size="11">— 유일 —</text>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="SYNAPEX mark">
+  <path d="M 16 156 L 50 156 L 56 142 L 62 170 L 68 142 L 74 170 L 80 156 L 110 156 L 116 138 L 122 174 L 128 138 L 134 174 L 140 156 L 154 156"
+        fill="none" stroke="#00E5FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 154 156 L 188 60 L 222 156"
+        fill="none" stroke="#FFB547" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+  <line x1="222" y1="156" x2="240" y2="156" stroke="#00E5FF" stroke-width="6" stroke-linecap="round" />
+  <circle cx="188" cy="60" r="9" fill="#FFB547" />
+  <circle cx="188" cy="60" r="18" fill="none" stroke="#FFB547" stroke-width="2" opacity="0.4" />
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Act">
+  <circle cx="44" cy="32" r="16" fill="none" stroke="#F4F1EA" stroke-width="2" opacity="0.6" />
+  <circle cx="44" cy="32" r="9" fill="none" stroke="#F4F1EA" stroke-width="2" />
+  <circle cx="44" cy="32" r="3.5" fill="#FFB547" />
+  <path d="M 8 32 L 38 32" stroke="#00E5FF" stroke-width="3" stroke-linecap="round" />
+  <path d="M 32 25 L 40 32 L 32 39" fill="none" stroke="#00E5FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
